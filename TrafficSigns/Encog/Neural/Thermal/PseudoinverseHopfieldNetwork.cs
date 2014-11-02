@@ -1,9 +1,11 @@
 ﻿using Encog.MathUtil.Matrices;
 using Encog.ML.Data;
+using Encog.ML.Data.Specific;
 using Encog.Neural;
 using Encog.Neural.Thermal;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,35 +14,84 @@ namespace TrafficSigns.Encog.Neural.Thermal
 {
     public class PseudoinverseHopfieldNetwork : HopfieldNetwork
     {
+        public double LearningRate { get; set; }
+
         public PseudoinverseHopfieldNetwork(int size) : base(size)
         {
+            LearningRate = 0.8d;
         }
 
-        public void AddPseudoinversePattern(IMLData pattern)
+        public Matrix GenerateWeightMatrix()
         {
-            if (pattern.Count != NeuronCount)
+            Matrix result = new Matrix(NeuronCount, NeuronCount);
+            for (int i = 0; i < NeuronCount; i++)
             {
-                throw new NeuralNetworkError("Network with " + NeuronCount
-                                             + " neurons, cannot learn a pattern of size "
-                                             + pattern.Count);
+                for (int j = 0; j < NeuronCount; j++)
+                {
+                    result[i, j] = GetWeight(i, j);
+                }
+            }
+            return result;
+        }
+
+        public void TrainDelta(IList<BiPolarMLData> patterns)
+        {
+            foreach (BiPolarMLData pattern in patterns)
+            {
+                Matrix weightMatrix = GenerateWeightMatrix();
+                Matrix patternMatrixT = Matrix.CreateRowMatrix(pattern);
+                Matrix patternMatrix = MatrixMath.Transpose(patternMatrixT);
+
+                Matrix deltaMatrix = MatrixMath.Multiply(weightMatrix, patternMatrix);
+                deltaMatrix = MatrixMath.Subtract(patternMatrix, deltaMatrix);
+                deltaMatrix = MatrixMath.Multiply(deltaMatrix, patternMatrixT);
+                deltaMatrix = MatrixMath.Multiply(deltaMatrix, LearningRate / (double)NeuronCount);
+
+                AddMatrixWeights(deltaMatrix);
+            }
+        }
+
+        public void TrainPseudoinverse(IList<BiPolarMLData> patterns)
+        {
+            double[,] oneOverQ = new double[patterns.Count, patterns.Count];
+            for (int n = 0; n < patterns.Count; n++)
+            {
+                for (int m = 0; m < patterns.Count; m++)
+                {
+                    double sumQ = 0d;
+                    for (int k = 0; k < NeuronCount; k++)
+                    {
+                        sumQ += patterns[n][k] * patterns[m][k];
+                    }
+                    oneOverQ[n, m] = 1d / (sumQ / (double)NeuronCount);
+                }
             }
 
-            // Create a row matrix from the input, convert boolean to bipolar
-            //Matrix m2 = Matrix.CreateRowMatrix(pattern);
-            //// Transpose the matrix and multiply by the original input matrix
-            //Matrix m1 = MatrixMath.Transpose(m2);
-            //Matrix m3 = MatrixMath.Multiply(m1, m2);
+            for (int i = 0; i < NeuronCount; i++)
+            {
+                for (int j = 0; j < NeuronCount; j++)
+                {
+                    if (i == j)
+                    {
+                        SetWeight(i, j, 0d);
+                    }
+                    SetWeight(i, j, CalculateWeightPseudoinverse(i, j, patterns, oneOverQ));
+                }
+            }
+        }
 
-            //// matrix 3 should be square by now, so create an identity
-            //// matrix of the same size.
-            //Matrix identity = MatrixMath.Identity(m3.Rows);
+        protected double CalculateWeightPseudoinverse(int i, int j, IList<BiPolarMLData> patterns, double[,] oneOverQ)
+        {
+            double sum = 0d;
+            for (int n = 0; n < patterns.Count; n++)
+            {
+                for (int m = 0; m < patterns.Count; m++)
+                {
+                    sum += patterns[n][i] * oneOverQ[n, m] * patterns[m][j];
+                }
+            }
 
-            //// subtract the identity matrix
-            //Matrix m4 = MatrixMath.Subtract(m3, identity);
-
-            // now add the calculated matrix, for this pattern, to the
-            // existing weight matrix.
-            ConvertHopfieldMatrix(m4);
+            return sum / (double)NeuronCount;
         }
 
         /// <summary>
@@ -48,7 +99,7 @@ namespace TrafficSigns.Encog.Neural.Thermal
         /// </summary>
         ///
         /// <param name="delta">The amount to change the weights by.</param>
-        private void ConvertHopfieldMatrix(Matrix delta)
+        private void AddMatrixWeights(Matrix delta)
         {
             // add the new weight matrix to what is there already
             for (int row = 0; row < delta.Rows; row++)

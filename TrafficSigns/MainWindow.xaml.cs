@@ -1,4 +1,5 @@
-﻿using Encog.ML.Data.Specific;
+﻿using Encog.ML.Data;
+using Encog.ML.Data.Specific;
 using Encog.Neural.Thermal;
 using Microsoft.Win32;
 using System;
@@ -84,8 +85,15 @@ namespace TrafficSigns
 
                 BiPolarMLData imageData = ImageUtils.GetImageData(filePath);
 
-                LoadedImages.Add(fileName, imageData);
-                loadedFilesListBox.Items.Add(new ListBoxItem { Content = fileName });
+                try
+                {
+                    LoadedImages.Add(fileName, imageData);
+                    loadedFilesListBox.Items.Add(new ListBoxItem { Content = fileName });
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("This pattern is already on the list.");
+                }
             }
         }
 
@@ -109,10 +117,14 @@ namespace TrafficSigns
         {
             Network = new PseudoinverseHopfieldNetwork(ImageUtils.ImageWidth * ImageUtils.ImageHeight);
 
-            foreach (KeyValuePair<string, BiPolarMLData> image in LoadedImages)
-            {
-                Network.AddPattern(image.Value);
-            }
+            Network.TrainDelta(LoadedImages.Values.ToList());
+
+            //Network.TrainPseudoinverse(LoadedImages.Values.ToList());
+
+            //foreach (BiPolarMLData image in LoadedImages.Values)
+            //{
+            //    Network.AddPattern(image);
+            //}
         }
 
         private void showSelectedButton_Click(object sender, RoutedEventArgs e)

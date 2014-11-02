@@ -1,0 +1,24 @@
+﻿<Window x:Class="TrafficSigns.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Traffic signs - Hopfield network" Height="350" Width="833">
+    <Grid Height="319" VerticalAlignment="Top" HorizontalAlignment="Right" Width="825">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="158*"/>
+            <RowDefinition Height="161*"/>
+        </Grid.RowDefinitions>
+        <Button x:Name="loadFileButton" Content="Load file" HorizontalAlignment="Left" Margin="10,141,0,0" VerticalAlignment="Top" Width="75" Click="loadFileButton_Click" Grid.RowSpan="2"/>
+        <ListBox x:Name="loadedFilesListBox" HorizontalAlignment="Left" Height="100" Margin="10,36,0,0" VerticalAlignment="Top" Width="186"/>
+        <Label Content="Loaded files:&#xD;&#xA;" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="100" Height="26"/>
+        <Canvas x:Name="recognizedCanvas" HorizontalAlignment="Left" Height="256" Margin="511,36,0,0" VerticalAlignment="Top" Width="256" Grid.RowSpan="2"/>
+        <Label Content="Recognized pattern:" HorizontalAlignment="Left" Height="26" Margin="511,10,0,0" VerticalAlignment="Top" Width="200"/>
+        <Button x:Name="trainButton" Content="Train" HorizontalAlignment="Left" Margin="10,35,0,0" VerticalAlignment="Top" Width="75" Click="trainButton_Click" Grid.Row="1"/>
+        <Button x:Name="testButton" Content="Test" HorizontalAlignment="Left" Margin="10,131,0,0" VerticalAlignment="Top" Width="75" Click="testButton_Click" Grid.Row="1"/>
+        <Label Content="Selected pattern:" HorizontalAlignment="Left" Margin="216,10,0,0" VerticalAlignment="Top"/>
+        <Canvas x:Name="selectedCanvas" HorizontalAlignment="Left" Height="256" Margin="216,36,0,0" Grid.RowSpan="2" VerticalAlignment="Top" Width="256"/>
+        <Button x:Name="showSelectedButton" Content="Show selected" HorizontalAlignment="Left" Margin="112,141,0,0" VerticalAlignment="Top" Width="84" Height="21" Grid.RowSpan="2" Click="showSelectedButton_Click"/>
+        <Label Content="Max cycles:" HorizontalAlignment="Left" Margin="10,77,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75"/>
+        <TextBox x:Name="maxCyclesTextBox" HorizontalAlignment="Left" Height="23" Margin="10,103,0,0" Grid.Row="1" TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="75"/>
+        <Button x:Name="deleteFilesButton" Content="Delete files" HorizontalAlignment="Left" Margin="10,8,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75" Click="deleteFilesButton_Click"/>
+    </Grid>
+</Window>

@@ -1,0 +1,4 @@
+softcomputing
+=============
+
+Softcomputing project/laboratory.

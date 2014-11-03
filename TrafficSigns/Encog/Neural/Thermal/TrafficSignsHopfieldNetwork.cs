@@ -12,11 +12,11 @@ using System.Threading.Tasks;
 
 namespace TrafficSigns.Encog.Neural.Thermal
 {
-    public class PseudoinverseHopfieldNetwork : HopfieldNetwork
+    public class TrafficSignsHopfieldNetwork : HopfieldNetwork
     {
         public double LearningRate { get; set; }
 
-        public PseudoinverseHopfieldNetwork(int size) : base(size)
+        public TrafficSignsHopfieldNetwork(int size) : base(size)
         {
             LearningRate = 0.8d;
         }
@@ -32,6 +32,17 @@ namespace TrafficSigns.Encog.Neural.Thermal
                 }
             }
             return result;
+        }
+
+        public void TrainHebbian(IList<BiPolarMLData> patterns, int iterations = 1)
+        {
+            for (int i = 0; i < iterations; i++)
+            {
+                foreach (BiPolarMLData pattern in patterns)
+                {
+                    AddPattern(pattern);
+                }
+            }
         }
 
         public void TrainDelta(IList<BiPolarMLData> patterns)

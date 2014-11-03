@@ -78,7 +78,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Encog\Neural\Thermal\PseudoinverseHopfieldNetwork.cs" />
+    <Compile Include="Encog\Neural\Thermal\TrafficSignsHopfieldNetwork.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

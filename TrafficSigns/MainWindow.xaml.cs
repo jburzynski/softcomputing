@@ -130,11 +130,14 @@ namespace TrafficSigns
         {
             Network = new TrafficSignsHopfieldNetwork(ImageUtils.ImageWidth * ImageUtils.ImageHeight);
 
-            Network.TrainDelta(LoadedImages.Values.ToList());
-
-            //Network.TrainPseudoinverse(LoadedImages.Values.ToList());
-
-            //Network.TrainHebbian(LoadedImages.Values.ToList());
+            if (deltaRuleRadioButton.IsChecked.HasValue && deltaRuleRadioButton.IsChecked == true)
+            {
+                Network.TrainDelta(LoadedImages.Values.ToList());
+            }
+            else
+            {
+                Network.TrainPseudoinverse(LoadedImages.Values.ToList());
+            }
         }
 
         private void deleteFilesButton_Click(object sender, RoutedEventArgs e)

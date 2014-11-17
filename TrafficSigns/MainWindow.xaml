@@ -1,8 +1,8 @@
 ﻿<Window x:Class="TrafficSigns.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Traffic signs - Hopfield network" Height="400" Width="833">
-    <Grid Height="368" VerticalAlignment="Top" HorizontalAlignment="Right" Width="825">
+        Title="Traffic signs - Hopfield network" Height="440" Width="833">
+    <Grid Height="410" VerticalAlignment="Top" HorizontalAlignment="Right" Width="825" Margin="0,0,0,-1">
         <Grid.RowDefinitions>
             <RowDefinition Height="158*"/>
             <RowDefinition Height="161*"/>
@@ -12,15 +12,17 @@
         <Label Content="Loaded files:&#xD;&#xA;" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="100" Height="26"/>
         <Canvas x:Name="recognizedCanvas" HorizontalAlignment="Left" Height="256" Margin="511,36,0,0" VerticalAlignment="Top" Width="256" Grid.RowSpan="2"/>
         <Label Content="Recognized pattern:" HorizontalAlignment="Left" Height="26" Margin="511,10,0,0" VerticalAlignment="Top" Width="200"/>
-        <Button x:Name="trainButton" Content="Train" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" Width="75" Click="trainButton_Click" Grid.Row="1" Height="38"/>
-        <Button x:Name="testButton" Content="Test" HorizontalAlignment="Left" Margin="10,147,0,0" VerticalAlignment="Top" Width="150" Click="testButton_Click" Grid.Row="1"/>
+        <Button x:Name="trainButton" Content="Train" HorizontalAlignment="Left" Margin="10,35,0,0" VerticalAlignment="Top" Width="75" Click="trainButton_Click" Grid.Row="1" Height="38"/>
+        <Button x:Name="testButton" Content="Test" HorizontalAlignment="Left" Margin="10,177,0,0" VerticalAlignment="Top" Width="150" Click="testButton_Click" Grid.Row="1"/>
         <Label Content="Selected pattern:" HorizontalAlignment="Left" Margin="216,10,0,0" VerticalAlignment="Top"/>
         <Canvas x:Name="selectedCanvas" HorizontalAlignment="Left" Height="256" Margin="216,36,0,0" Grid.RowSpan="2" VerticalAlignment="Top" Width="256"/>
-        <Label Content="Max cycles:" HorizontalAlignment="Left" Margin="10,116,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75"/>
-        <TextBox x:Name="maxCyclesTextBox" HorizontalAlignment="Left" Height="23" Margin="85,116,0,0" Grid.Row="1" TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="75"/>
+        <Label Content="Max cycles:" HorizontalAlignment="Left" Margin="10,146,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75"/>
+        <TextBox x:Name="maxCyclesTextBox" HorizontalAlignment="Left" Height="23" Margin="85,146,0,0" Grid.Row="1" TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="75"/>
         <Button x:Name="deleteFilesButton" Content="Delete all files" HorizontalAlignment="Left" Margin="10,166,0,0" VerticalAlignment="Top" Width="186" Click="deleteFilesButton_Click" Grid.RowSpan="2"/>
         <Button x:Name="deleteFileButton" Content="Delete file" HorizontalAlignment="Left" Margin="121,141,0,0" VerticalAlignment="Top" Width="75" Grid.RowSpan="2" Click="deleteFileButton_Click"/>
-        <RadioButton x:Name="deltaRuleRadioButton" Content="Delta rule" HorizontalAlignment="Left" Margin="101,44,0,0" Grid.Row="1" VerticalAlignment="Top" GroupName="Training" IsChecked="True"/>
-        <RadioButton x:Name="pseudoinverseRadioButton" Content="Pseudoinverse" HorizontalAlignment="Left" Margin="101,64,0,0" Grid.Row="1" VerticalAlignment="Top" GroupName="Training"/>
+        <RadioButton x:Name="deltaRuleRadioButton" Content="Delta rule" HorizontalAlignment="Left" Margin="101,35,0,0" Grid.Row="1" VerticalAlignment="Top" GroupName="Training" IsChecked="True"/>
+        <RadioButton x:Name="pseudoinverseRadioButton" Content="Pseudoinverse" HorizontalAlignment="Left" Margin="101,55,0,0" Grid.Row="1" VerticalAlignment="Top" GroupName="Training"/>
+        <Label Content="Max iterations" HorizontalAlignment="Left" Margin="10,78,0,0" Grid.Row="1" VerticalAlignment="Top"/>
+        <TextBox x:Name="maxIterationsTextBox" HorizontalAlignment="Left" Height="23" Margin="101,78,0,0" Grid.Row="1" TextWrapping="Wrap" Text="200" VerticalAlignment="Top" Width="59"/>
     </Grid>
 </Window>

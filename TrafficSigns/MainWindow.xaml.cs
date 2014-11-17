@@ -67,13 +67,7 @@ namespace TrafficSigns
         {
             int maxCycles = Int32.Parse(maxCyclesTextBox.Text);
 
-            var currentState = new BiPolarMLData(data.Count);
-            for (int i = 0; i < data.Count; i++)
-            {
-                currentState.SetBoolean(i, (data[i] > 0));
-            }
-            Network.CurrentState = currentState;
-
+            Network.SetCurrentBiPolarState(data);
             Network.RunUntilStable(maxCycles);
 
             DrawPattern(Network.CurrentState, recognizedCanvas);
@@ -130,9 +124,11 @@ namespace TrafficSigns
         {
             Network = new TrafficSignsHopfieldNetwork(ImageUtils.ImageWidth * ImageUtils.ImageHeight);
 
+            int maxIterations = Int32.Parse(maxIterationsTextBox.Text);
+
             if (deltaRuleRadioButton.IsChecked.HasValue && deltaRuleRadioButton.IsChecked == true)
             {
-                Network.TrainDelta(LoadedImages.Values.ToList());
+                Network.TrainDelta(LoadedImages.Values.ToList(), maxIterations);
             }
             else
             {

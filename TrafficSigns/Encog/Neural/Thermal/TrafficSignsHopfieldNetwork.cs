@@ -101,52 +101,31 @@ namespace TrafficSigns.Encog.Neural.Thermal
 
         public void TrainPseudoinverse(IList<BiPolarMLData> patterns)
         {
-            double[,] oneOverQ = new double[patterns.Count, patterns.Count];
-            for (int n = 0; n < patterns.Count; n++)
-            {
-                for (int m = 0; m < patterns.Count; m++)
-                {
-                    double sumQ = 0d;
-                    for (int k = 0; k < NeuronCount; k++)
-                    {
-                        sumQ += patterns[n][k] * patterns[m][k];
-                    }
-                    oneOverQ[n, m] = 1d / (sumQ / (double)NeuronCount);
-                }
-            }
+            Matrix patternsMatrix = GeneratePatternsMatrix(patterns);
+            Matrix patternsMatrixT = MatrixMath.Transpose(patternsMatrix);
 
-            for (int i = 0; i < NeuronCount; i++)
-            {
-                for (int j = 0; j < NeuronCount; j++)
-                {
-                    if (i == j)
-                    {
-                        SetWeight(i, j, 0d);
-                    }
-                    SetWeight(i, j, CalculateWeightPseudoinverse(i, j, patterns, oneOverQ));
-                }
-            }
+            Matrix middleProductMatrix = MatrixMath.Multiply(patternsMatrixT, patternsMatrix);
+            Matrix inversedMatrix = middleProductMatrix.Inverse();
+
+            Matrix productWithInverseMatrix = MatrixMath.Multiply(patternsMatrix, inversedMatrix);
+            Matrix weightMatrix = MatrixMath.Multiply(productWithInverseMatrix, patternsMatrixT);
+
+            SetWeightMatrix(weightMatrix);
         }
 
-        protected double CalculateWeightPseudoinverse(int i, int j, IList<BiPolarMLData> patterns, double[,] oneOverQ)
+        protected Matrix GeneratePatternsMatrix(IList<BiPolarMLData> patterns)
         {
-            double sum = 0d;
-            for (int n = 0; n < patterns.Count; n++)
-            {
-                for (int m = 0; m < patterns.Count; m++)
-                {
-                    sum += patterns[n][i] * oneOverQ[n, m] * patterns[m][j];
-                }
-            }
+            var sourceMatrix = new double[patterns.Count][];
 
-            return sum / (double)NeuronCount;
+            for (int i = 0; i < patterns.Count; i++)
+            {
+                sourceMatrix[i] = patterns[i].Data;
+            }
+            var resultT = new Matrix(sourceMatrix);
+
+            return MatrixMath.Transpose(resultT);
         }
 
-        /// <summary>
-        /// Update the Hopfield weights after training.
-        /// </summary>
-        ///
-        /// <param name="delta">The amount to change the weights by.</param>
         private void AddMatrixWeights(Matrix delta)
         {
             // add the new weight matrix to what is there already
@@ -155,6 +134,17 @@ namespace TrafficSigns.Encog.Neural.Thermal
                 for (int col = 0; col < delta.Rows; col++)
                 {
                     AddWeight(row, col, delta[row, col]);
+                }
+            }
+        }
+
+        public void SetWeightMatrix(Matrix weightMatrix)
+        {
+            for (int row = 0; row < weightMatrix.Rows; row++)
+            {
+                for (int col = 0; col < weightMatrix.Cols; col++)
+                {
+                    SetWeight(row, col, weightMatrix[row, col]);
                 }
             }
         }

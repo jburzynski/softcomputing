@@ -115,6 +115,9 @@ namespace TrafficSigns
                 string filePath = dialog.FileName;
                 BiPolarMLData imageData = ImageUtils.GetImageData(filePath);
 
+                //distort image             
+                //ImageUtils.DistortImage(imageData, 0.4);
+
                 DrawPattern(imageData, selectedCanvas);
                 EvaluatePattern(imageData);
             }

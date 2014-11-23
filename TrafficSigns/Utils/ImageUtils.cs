@@ -49,5 +49,27 @@ namespace TrafficSigns.Utils
             return result;
         }
 
+        //white noise distort
+        public static void DistortImage(BiPolarMLData inputImage, double percentage)
+        {
+            Random randomGenerator = new Random();
+
+            for (int i = 0; i < ImageWidth; i++)
+            {
+                for (int j = 0; j < ImageHeight; j++)
+                {
+                    bool orginal = inputImage.GetBoolean(i * ImageWidth + j);
+
+                    if (randomGenerator.NextDouble() < percentage)
+                    {
+                        inputImage.SetBoolean(i * ImageWidth + j, !orginal);
+                    }
+                }
+            }            
+        }
+
+
+
+
     }
 }
